@@ -1411,8 +1411,8 @@ function generateTestimonials() {
     // Initial display
     updateTestimonialsDisplay();
 
-    // Set up auto-generation every 2 seconds
-    setInterval(generateNewTestimonial, 2000);
+    // Set up auto-generation every 5 seconds
+    setInterval(generateNewTestimonial, 5000);
 
     // Make function globally accessible for manual triggering if needed
     window.generateNewTestimonial = generateNewTestimonial;
