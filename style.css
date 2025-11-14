@@ -319,7 +319,7 @@ body {
 .testimonials-track {
     display: flex;
     gap: 20px;
-    animation: scrollTestimonials 30s linear infinite;
+    animation: scrollTestimonials 10s linear infinite;
 }
 
 .testimonial-card {
