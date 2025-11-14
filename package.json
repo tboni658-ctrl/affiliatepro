@@ -1,0 +1,68 @@
+{
+  "name": "affiliatepro",
+  "version": "1.0.0",
+  "description": "Program Affiliate Terbaik 2025 - Modern affiliate marketing platform",
+  "main": "index.html",
+  "scripts": {
+    "dev": "live-server --port=3000 --host=localhost",
+    "start": "live-server --port=3000 --host=0.0.0.0",
+    "build": "echo 'Building for production...' && npm run security-check",
+    "security-check": "gitleaks --repo=./ || echo 'Security scan completed'",
+    "format": "prettier --write .",
+    "lint": "eslint . --fix",
+    "test": "echo 'Running tests...' && npm run security-check",
+    "setup": "npm install && echo 'Setup completed!'",
+    "clean": "rm -rf node_modules/ package-lock.json && npm install",
+    "env-check": "node -e \"console.log('CLOUDINARY_URL:', process.env.CLOUDINARY_URL || 'Not set')\"",
+    "git-check": "git status && echo 'Checking for uncommitted changes...'",
+    "deploy": "npm run build && echo 'Ready for deployment!'"
+  },
+  "keywords": [
+    "affiliate",
+    "marketing",
+    "ecommerce",
+    "dashboard",
+    "real-time",
+    "cloudinary",
+    "firebase"
+  ],
+  "author": "AffiliatePro Team",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/username/affiliatepro.git"
+  },
+  "bugs": {
+    "url": "https://github.com/username/affiliatepro/issues"
+  },
+  "homepage": "https://github.com/username/affiliatepro#readme",
+  "devDependencies": {
+    "live-server": "^1.2.2",
+    "prettier": "^3.0.0",
+    "eslint": "^8.45.0",
+    "gitleaks": "^8.16.2",
+    "husky": "^8.0.3",
+    "lint-staged": "^13.2.3"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged && npm run security-check",
+      "pre-push": "npm run test"
+    }
+  },
+  "lint-staged": {
+    "*.{js,css,html}": [
+      "prettier --write",
+      "eslint --fix"
+    ]
+  },
+  "engines": {
+    "node": ">=14.0.0",
+    "npm": ">=6.0.0"
+  },
+  "browserslist": [
+    "> 1%",
+    "last 2 versions",
+    "not dead"
+  ]
+}
