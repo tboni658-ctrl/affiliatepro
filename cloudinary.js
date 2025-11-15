@@ -2,19 +2,16 @@
 class CloudinaryService {
   constructor() {
     this.cloudName = 'dwkky1rp9';
-    this.apiKey = '556278516576121'; // Ganti dengan API Key Anda
-    this.apiSecret = 'WVHLiT97gO9jBCSOwjxYFCJojrs'; // Ganti dengan API Secret Anda
-    this.uploadPreset = 'affiliate_products'; // Buat upload preset di Cloudinary dashboard
+    this.apiKey = '556278516576121';
+    this.apiSecret = 'WVHLiT97gO9jBCSOwjxYFCJojrs';
+    this.uploadPreset = 'affiliate_products';
     this.initialized = false;
     this.maxFileSize = 5 * 1024 * 1024; // 5MB max
     this.allowedTypes = ['image/jpeg', 'image/png', 'image/webp', 'image/gif'];
   }
   
-  // Inisialisasi dengan credentials
-  initialize(apiKey = null, apiSecret = null) {
-    if (apiKey) this.apiKey = apiKey;
-    if (apiSecret) this.apiSecret = apiSecret;
-    
+  // Inisialisasi service
+  initialize() {
     if (this.apiKey && this.apiSecret && this.cloudName) {
       this.initialized = true;
       console.log('✅ Cloudinary service initialized!');
@@ -22,7 +19,6 @@ class CloudinaryService {
       return true;
     } else {
       console.error('❌ Cloudinary credentials not complete');
-      console.log('Please set API Key and API Secret');
       return false;
     }
   }
@@ -54,7 +50,7 @@ class CloudinaryService {
       // Validate file
       this.validateFile(file);
       
-      // Create form data
+      // Create form data untuk unsigned upload
       const formData = new FormData();
       formData.append('file', file);
       formData.append('upload_preset', this.uploadPreset);
@@ -107,7 +103,7 @@ class CloudinaryService {
     }
   }
   
-  // Delete image dari Cloudinary (memerlukan signed request)
+  // Delete image dari Cloudinary (optional, memerlukan signed request)
   async deleteImage(imageUrl) {
     if (!this.initialized) {
       console.log('⚠️ Cloudinary service not initialized');
@@ -124,7 +120,7 @@ class CloudinaryService {
       const timestamp = Math.round(new Date().getTime() / 1000);
       const stringToSign = `public_id=${publicId}&timestamp=${timestamp}${this.apiSecret}`;
       
-      // Create SHA-1 signature (simplified, in production use crypto library)
+      // Create SHA-1 signature
       const signature = await this.generateSHA1(stringToSign);
       
       // Create form data untuk delete
@@ -154,10 +150,8 @@ class CloudinaryService {
     }
   }
   
-  // Generate SHA-1 signature (simplified version)
+  // Generate SHA-1 signature
   async generateSHA1(message) {
-    // In production, use a proper crypto library
-    // This is a simplified version for demonstration
     const encoder = new TextEncoder();
     const data = encoder.encode(message);
     const hashBuffer = await crypto.subtle.digest('SHA-1', data);
@@ -177,21 +171,6 @@ class CloudinaryService {
     };
   }
   
-  // Setup credentials dari environment variable
-  setupFromEnv() {
-    // Jika menggunakan environment variable
-    if (typeof CLOUDINARY_URL !== 'undefined') {
-      const matches = CLOUDINARY_URL.match(/cloudinary:\/\/(\w+):(\w+)@(\w+)/);
-      if (matches) {
-        this.apiKey = matches[1];
-        this.apiSecret = matches[2];
-        this.cloudName = matches[3];
-        return this.initialize();
-      }
-    }
-    return false;
-  }
-  
   isInitialized() {
     return this.initialized;
   }
@@ -202,9 +181,6 @@ window.cloudinaryService = new CloudinaryService();
 
 // Auto-initialize when imported
 document.addEventListener('DOMContentLoaded', () => {
-  // Setup dari environment variable atau manual
-  if (!window.cloudinaryService.setupFromEnv()) {
-    // Initialize dengan credentials yang ada
-    window.cloudinaryService.initialize();
-  }
+  // Initialize dengan credentials yang ada
+  window.cloudinaryService.initialize();
 });
