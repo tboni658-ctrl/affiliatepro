@@ -674,7 +674,7 @@
                     <label>Gambar Produk</label>
                     <div class="image-upload-container">
                         <input type="file" id="productImage" accept="image/*" onchange="previewImage(event)">
-                        <div id="imagePreview" class="image-preview">
+                        <div id="imagePreview" class="image-preview" onclick="document.getElementById('productImage').click()">
                             <i class="fas fa-image"></i>
                             <p>Klik untuk upload gambar</p>
                         </div>
