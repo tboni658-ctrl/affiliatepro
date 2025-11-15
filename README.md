@@ -1,71 +1,47 @@
 # AffiliatePro - Program Affiliate Terbaik 2025
 
-Aplikasi web program affiliate modern dengan fitur lengkap untuk mengelola produk, pengguna, dan komisi.
+![AffiliatePro Logo](https://via.placeholder.com/150x150/00bcd4/ffffff?text=AP)
 
-## 🚀 Fitur Utama
+> Dapatkan Uang dari HP Anda – Cukup Share Link, Komisi Otomatis Masuk!
 
-### 📱 Multi-Platform
-- **Responsive Design**: Optimal di desktop, tablet, dan mobile
-- **PWA Ready**: Bisa diinstall sebagai aplikasi mobile
-- **Dark Theme**: Tema gelap yang nyaman untuk mata
+## 📱 Tentang Aplikasi
 
-### 👥 User Management
-- **Registration & Login**: Sistem autentikasi yang aman
-- **Membership Levels**: 6 level membership (Warrior hingga Mytic)
-- **Profile Management**: Update data pengguna
-- **Forgot Password**: Reset password dengan mudah
+AffiliatePro adalah aplikasi web program affiliate yang memungkinkan siapa saja untuk menghasilkan uang hanya dengan berbagi link produk. Tanpa modal, tanpa stok barang, dan tanpa ribet packing!
 
-### 🛍️ Product Management
-- **Upload Gambar**: Upload produk ke Cloudinary dengan progress bar
-- **CRUD Products**: Tambah, edit, hapus produk
-- **Filter Produk**: Filter berdasarkan membership level
-- **Share Products**: Share produk dengan link affiliate
+## ✨ Fitur Utama
 
-### 💰 Commission System
-- **Real-time Tracking**: Tracking klik dan pesanan real-time
-- **Auto Commission**: Komisi otomatis terhitung
-- **Withdraw System**: Sistem penarikan dana
-- **Level-based Rates**: Komisi berbeda per level
+### 🎯 Untuk Affiliate
+- **Registrasi Gratis** - Mulai tanpa modal sepeserpun
+- **Ribuan Produk** - Brand ternama dengan komisi menarik
+- **Komisi Tinggi** - Hingga 50% per penjualan
+- **Dashboard Real-time** - Pantau klik, pesanan, dan komisi
+- **Multiple Membership** - Upgrade untuk dapatkan komisi lebih tinggi
+- **Withdraw Mudah** - Tarik komisi langsung ke rekening
 
-### 📊 Admin Dashboard
-- **User Management**: Kelola semua pengguna
-- **Product Management**: Kelola semua produk
-- **Settings**: Konfigurasi sistem
-- **Export Data**: Export data user ke CSV
+### 👑 Untuk Admin
+- **Manajemen User** - Kontrol data semua affiliate
+- **Kelola Produk** - Tambah/edit produk dengan upload gambar
+- **Pengaturan Membership** - Atur harga dan komisi tiap level
+- **Real-time Sync** - Data tersinkronisasi dengan Firebase
+- **Export Data** - Download data user dalam format CSV
 
-### 🔔 Notifications
-- **Auto Notifications**: Notifikasi penarikan otomatis
-- **Testimonials**: Testimonials auto-generate
-- **Toast Messages**: Pesan interaktif
-- **Real-time Updates**: Update data real-time
+### 🚀 Teknologi
+- **Frontend**: HTML5, CSS3, JavaScript ES6+
+- **Backend**: Firebase Realtime Database
+- **Storage**: Cloudinary untuk gambar produk
+- **Responsive**: Mobile-first design
+- **PWA Ready**: Bisa diinstall sebagai aplikasi
 
-## 🛠️ Teknologi
-
-### Frontend
-- **HTML5**: Semantic HTML5
-- **CSS3**: Modern CSS dengan Grid & Flexbox
-- **Vanilla JavaScript**: JavaScript murni tanpa framework
-- **Font Awesome**: Icons library
-
-### Backend Services
-- **Firebase Realtime Database**: Database real-time
-- **Cloudinary**: Cloud storage untuk gambar
-- **Local Storage**: Local backup
-
-### Features
-- **Progressive Web App**: PWA capabilities
-- **Offline Support**: Fallback ke localStorage
-- **Real-time Sync**: Sinkronisasi data real-time
-- **Image Upload**: Upload dengan progress tracking
-
-## 📦 Instalasi
+## 🛠️ Cara Install & Jalankan
 
 ### Prerequisites
-- Web browser modern (Chrome, Firefox, Safari, Edge)
-- Koneksi internet (untuk Firebase & Cloudinary)
+- Node.js 14+ (opsional, untuk development)
+- Git
+- Akun Firebase (untuk deployment)
+- Akun Cloudinary (untuk upload gambar)
 
-### Setup
-1. Clone repository:
-```bash
-git clone https://github.com/username/affiliatepro.git
-cd affiliatepro
+### Quick Start
+1. **Clone Repository**
+   ```bash
+   git clone https://github.com/affiliatepro/app.git
+   cd affiliatepro-app
