@@ -1,16 +1,19 @@
 {
-  "name": "affiliatepro",
+  "name": "affiliatepro-app",
   "version": "1.0.0",
-  "description": "Program Affiliate Terbaik 2025 - Modern Affiliate Marketing Platform",
+  "description": "Program Affiliate Terbaik 2025 - Dapatkan Uang dari HP Anda",
   "main": "index.html",
   "scripts": {
-    "start": "npx live-server --port=3000",
-    "dev": "npx live-server --port=3000 --open=/index.html",
-    "build": "echo 'Build complete - Ready for deployment'",
-    "deploy": "echo 'Deploy to production server'",
-    "test": "echo 'Run tests here'",
-    "lint": "echo 'Run linter here'",
-    "format": "echo 'Format code here'"
+    "start": "npx serve . -p 3000",
+    "dev": "npx serve . -p 3000 -o",
+    "build": "echo 'Build complete - Static files ready for deployment'",
+    "deploy": "echo 'Deploy to your preferred hosting service'",
+    "lint": "npx eslint *.js",
+    "format": "npx prettier --write *.js *.html *.css",
+    "test": "echo 'No tests specified yet'",
+    "firebase:deploy": "firebase deploy",
+    "firebase:serve": "firebase serve",
+    "setup": "npm install && echo 'Setup complete!'"
   },
   "keywords": [
     "affiliate",
@@ -18,11 +21,9 @@
     "commission",
     "ecommerce",
     "referral",
-    "mlm",
-    "network-marketing",
     "indonesia",
-    "web-app",
-    "pwa"
+    "mobile",
+    "web-app"
   ],
   "author": {
     "name": "AffiliatePro Team",
@@ -32,74 +33,26 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/username/affiliatepro.git"
+    "url": "https://github.com/affiliatepro/app.git"
   },
   "bugs": {
-    "url": "https://github.com/username/affiliatepro/issues"
+    "url": "https://github.com/affiliatepro/app/issues"
   },
   "homepage": "https://affiliatepro.com",
   "devDependencies": {
-    "live-server": "^1.2.2"
+    "eslint": "^8.57.0",
+    "prettier": "^3.2.5",
+    "serve": "^14.2.1",
+    "firebase-tools": "^13.7.2"
   },
+  "dependencies": {},
   "engines": {
     "node": ">=14.0.0"
   },
   "browserslist": [
-    "Chrome >= 60",
-    "Firefox >= 55",
-    "Safari >= 12",
-    "Edge >= 79"
-  ],
-  "manifest": {
-    "name": "AffiliatePro",
-    "short_name": "AffiliatePro",
-    "description": "Program Affiliate Terbaik 2025",
-    "start_url": "/index.html",
-    "display": "standalone",
-    "background_color": "#1a1a2e",
-    "theme_color": "#00bcd4",
-    "orientation": "portrait-primary",
-    "icons": [
-      {
-        "src": "icons/icon-72x72.png",
-        "sizes": "72x72",
-        "type": "image/png"
-      },
-      {
-        "src": "icons/icon-96x96.png",
-        "sizes": "96x96",
-        "type": "image/png"
-      },
-      {
-        "src": "icons/icon-128x128.png",
-        "sizes": "128x128",
-        "type": "image/png"
-      },
-      {
-        "src": "icons/icon-144x144.png",
-        "sizes": "144x144",
-        "type": "image/png"
-      },
-      {
-        "src": "icons/icon-152x152.png",
-        "sizes": "152x152",
-        "type": "image/png"
-      },
-      {
-        "src": "icons/icon-192x192.png",
-        "sizes": "192x192",
-        "type": "image/png"
-      },
-      {
-        "src": "icons/icon-384x384.png",
-        "sizes": "384x384",
-        "type": "image/png"
-      },
-      {
-        "src": "icons/icon-512x512.png",
-        "sizes": "512x512",
-        "type": "image/png"
-      }
-    ]
-  }
+    "> 1%",
+    "last 2 versions",
+    "not dead",
+    "not ie <= 11"
+  ]
 }
