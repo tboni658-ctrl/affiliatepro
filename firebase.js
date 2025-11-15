@@ -1,22 +1,11 @@
-// Firebase Configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyCXiyBtNYDNfmDGDkqVOs_8DFU40zi2cZA",
-  authDomain: "affiliatepro-app.firebaseapp.com",
-  databaseURL: "https://affiliatepro-app-default-rtdb.asia-southeast1.firebasedatabase.app",
-  projectId: "affiliatepro-app",
-  storageBucket: "affiliatepro-app.firebasestorage.app",
-  messagingSenderId: "457035654100",
-  appId: "1:457035654100:web:74b5896e1dc384b3c9ec41",
-  measurementId: "G-GZFRL4TGN1"
-};
-
-// Firebase Service untuk Real-time Sync
+// Firebase Service untuk Real-time Sync - FIXED VERSION
 class FirebaseService {
   constructor() {
     this.db = null;
     this.app = null;
     this.initialized = false;
     this.listeners = new Map();
+    this.adminCode = '521389'; // Store admin code
   }
 
   async initialize() {
@@ -25,7 +14,7 @@ class FirebaseService {
     try {
       // Import Firebase SDK
       const { initializeApp } = await import('https://www.gstatic.com/firebasejs/9.6.1/firebase-app.js');
-      const { getDatabase, ref, onValue, set, get, update, remove } = await import('https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js');
+      const { getDatabase, ref, onValue, set, get, update, remove, push } = await import('https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js');
 
       // Initialize Firebase
       this.app = initializeApp(firebaseConfig);
@@ -33,12 +22,9 @@ class FirebaseService {
       this.initialized = true;
 
       console.log('✅ Firebase connected successfully!');
-      console.log('📊 Database URL:', firebaseConfig.databaseURL);
       
-      // --- PERUBAHAN KRUSIAL: NONAKTIFKAN INISIALISASI DARI LOCALSTORAGE ---
-      // Fungsi ini adalah penyebab data hilang karena menimpa data server dengan data klien.
-      // Jika Anda ingin memindahkan data dari localStorage lama, jalankan sekali lalu nonaktifkan kembali.
-      // this.initializeDataFromLocalStorage();
+      // Initialize data dari localStorage ke Firebase
+      await this.initializeDataFromLocalStorage();
       
       return true;
     } catch (error) {
@@ -48,89 +34,51 @@ class FirebaseService {
     }
   }
 
-  // Get Firebase app instance for Storage
+  // Get Firebase app instance
   getApp() {
     return this.app;
   }
 
-  // --- FUNGSI-FUNGSI BARU YANG LEBIH AMAN ---
+  // Initialize data dari localStorage ke Firebase - FIXED
+  async initializeDataFromLocalStorage() {
+    if (!this.initialized) return;
 
-  // Tambahkan satu user baru ke database
-  async addNewUser(userId, userData) {
-    if (!this.initialized) {
-      console.error('⚠️ Firebase not initialized, user not added');
-      return false;
-    }
     try {
-      const { ref, set } = await import('https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js');
-      const userRef = ref(this.db, `users/${userId}`); // Path spesifik ke user
-      await set(userRef, userData);
-      console.log('✅ New user added to Firebase:', userId);
-      return true;
-    } catch (error) {
-      console.error('❌ Error adding new user:', error);
-      return false;
-    }
-  }
-
-  // Ambil data satu user berdasarkan ID
-  async getUserById(userId) {
-    if (!this.initialized) return null;
-    try {
-      const { ref, get } = await import('https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js');
-      const userRef = ref(this.db, `users/${userId}`);
-      const snapshot = await get(userRef);
-      return snapshot.exists() ? snapshot.val() : null;
-    } catch (error) {
-      console.error('Error getting user by ID:', error);
-      return null;
-    }
-  }
-
-  // --- FUNGSI BARU: Cari user berdasarkan email ---
-  async getUserByEmail(email) {
-    if (!this.initialized) return null;
-    try {
-      const { ref, get } = await import('https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js');
-      const usersRef = ref(this.db, 'users');
-      const snapshot = await get(usersRef);
-      
-      if (snapshot.exists()) {
-        const users = snapshot.val();
-        // Cari user yang emailnya cocok
-        for (const userId in users) {
-          if (users[userId].email === email) {
-            return { id: userId, ...users[userId] };
-          }
-        }
+      // Sync users dengan proper structure
+      const localUsers = JSON.parse(localStorage.getItem('users') || '[]');
+      if (localUsers.length > 0) {
+        // Convert array to object for Firebase
+        const usersObject = {};
+        localUsers.forEach(user => {
+          usersObject[user.id] = user;
+        });
+        await this.updateUsersObject(usersObject);
+        console.log('📥 Users synced to Firebase:', Object.keys(usersObject).length);
       }
-      return null; // Tidak ditemukan
+
+      // Sync products dengan proper structure
+      const localProducts = JSON.parse(localStorage.getItem('products') || '[]');
+      if (localProducts.length > 0) {
+        const productsObject = {};
+        localProducts.forEach(product => {
+          productsObject[product.id] = product;
+        });
+        await this.updateProductsObject(productsObject);
+        console.log('📥 Products synced to Firebase:', Object.keys(productsObject).length);
+      }
+
+      // Sync settings
+      const localSettings = JSON.parse(localStorage.getItem('settings') || '{}');
+      if (Object.keys(localSettings).length > 0) {
+        await this.updateSettings(localSettings);
+        console.log('📥 Settings synced to Firebase');
+      }
     } catch (error) {
-      console.error('Error getting user by email:', error);
-      return null;
+      console.error('Error initializing data from localStorage:', error);
     }
   }
 
-  // Hapus satu user berdasarkan ID
-  async deleteUser(userId) {
-    if (!this.initialized) {
-      console.error('⚠️ Firebase not initialized, user not deleted');
-      return false;
-    }
-    try {
-      const { ref, remove } = await import('https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js');
-      const userRef = ref(this.db, `users/${userId}`);
-      await remove(userRef);
-      console.log('✅ User deleted from Firebase:', userId);
-      return true;
-    } catch (error) {
-      console.error('❌ Error deleting user:', error);
-      return false;
-    }
-  }
-
-  // --- FUNGSI SYNC YANG SUDAH DIPERBAIKI ---
-  // Sync data users (membaca dari Firebase dan mengubahnya menjadi array untuk frontend)
+  // Sync data users - FIXED
   async syncUsers(callback) {
     if (!this.initialized) {
       console.log('⚠️ Firebase not initialized, using localStorage fallback');
@@ -145,8 +93,12 @@ class FirebaseService {
       
       const unsubscribe = onValue(usersRef, (snapshot) => {
         const data = snapshot.val();
-        // Ubah objek menjadi array agar mudah digunakan di frontend
-        const users = data ? Object.keys(data).map(key => ({ id: key, ...data[key] })) : [];
+        let users = [];
+        
+        if (data) {
+          // Convert object to array for compatibility
+          users = Object.values(data);
+        }
         
         console.log('🔄 Users synced from Firebase:', users.length);
         
@@ -163,22 +115,33 @@ class FirebaseService {
     }
   }
 
-  // Sync data products
+  // Sync data products - FIXED
   async syncProducts(callback) {
     if (!this.initialized) {
+      console.log('⚠️ Firebase not initialized, using localStorage fallback');
       const products = JSON.parse(localStorage.getItem('products') || '[]');
       callback(products);
       return;
     }
+
     try {
       const { ref, onValue } = await import('https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js');
       const productsRef = ref(this.db, 'products');
+      
       const unsubscribe = onValue(productsRef, (snapshot) => {
         const data = snapshot.val();
-        const products = data ? Object.values(data) : [];
+        let products = [];
+        
+        if (data) {
+          products = Object.values(data);
+        }
+        
+        console.log('🔄 Products synced from Firebase:', products.length);
+        
         localStorage.setItem('products', JSON.stringify(products));
         callback(products);
       });
+
       this.listeners.set('products', unsubscribe);
     } catch (error) {
       console.error('❌ Error syncing products:', error);
@@ -187,69 +150,103 @@ class FirebaseService {
     }
   }
 
-  // Sync data settings
-  async syncSettings(callback) {
-    if (!this.initialized) {
-      const settings = JSON.parse(localStorage.getItem('settings') || '{}');
-      callback(settings);
-      return;
-    }
-    try {
-      const { ref, onValue } = await import('https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js');
-      const settingsRef = ref(this.db, 'settings');
-      const unsubscribe = onValue(settingsRef, (snapshot) => {
-        const data = snapshot.val();
-        const settings = data || {};
-        localStorage.setItem('settings', JSON.stringify(settings));
-        callback(settings);
-      });
-      this.listeners.set('settings', unsubscribe);
-    } catch (error) {
-      console.error('❌ Error syncing settings:', error);
-      const settings = JSON.parse(localStorage.getItem('settings') || '{}');
-      callback(settings);
-    }
-  }
-
-  // --- FUNGSI LAMA (HAPUS SAAT ANDA SUDAH SIAP) ---
-  // Fungsi-fungsi ini berbahaya karena menimpa seluruh data.
-  // Sebaiknya beralih ke fungsi baru (addNewUser, updateUser, deleteUser).
-  
+  // Update users di Firebase - FIXED
   async updateUsers(users) {
-    console.warn("⚠️ updateUsers() is deprecated and can cause data loss. Use addNewUser() or updateUser() instead.");
-    if (!this.initialized) return false;
+    if (!this.initialized) {
+      console.log('⚠️ Firebase not initialized, users not synced');
+      return false;
+    }
+
     try {
-      const { ref, set } = await import('https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js');
-      const usersRef = ref(this.db, 'users');
-      await set(usersRef, users);
-      localStorage.setItem('users', JSON.stringify(users));
-      return true;
+      // Convert array to object
+      const usersObject = {};
+      users.forEach(user => {
+        usersObject[user.id] = user;
+      });
+      
+      return await this.updateUsersObject(usersObject);
     } catch (error) {
       console.error('❌ Error updating users:', error);
       return false;
     }
   }
 
-  async updateProducts(products) {
+  // Update users object di Firebase - NEW
+  async updateUsersObject(usersObject) {
     if (!this.initialized) return false;
+
     try {
       const { ref, set } = await import('https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js');
-      const productsRef = ref(this.db, 'products');
-      await set(productsRef, products);
-      localStorage.setItem('products', JSON.stringify(products));
+      const usersRef = ref(this.db, 'users');
+      await set(usersRef, usersObject);
+      
+      console.log('✅ Users updated to Firebase:', Object.keys(usersObject).length);
+      
+      // Update localStorage sebagai backup
+      const usersArray = Object.values(usersObject);
+      localStorage.setItem('users', JSON.stringify(usersArray));
       return true;
+    } catch (error) {
+      console.error('❌ Error updating users object:', error);
+      return false;
+    }
+  }
+
+  // Update products di Firebase - FIXED
+  async updateProducts(products) {
+    if (!this.initialized) {
+      console.log('⚠️ Firebase not initialized, products not synced');
+      return false;
+    }
+
+    try {
+      // Convert array to object
+      const productsObject = {};
+      products.forEach(product => {
+        productsObject[product.id] = product;
+      });
+      
+      return await this.updateProductsObject(productsObject);
     } catch (error) {
       console.error('❌ Error updating products:', error);
       return false;
     }
   }
 
-  async updateSettings(settings) {
+  // Update products object di Firebase - NEW
+  async updateProductsObject(productsObject) {
     if (!this.initialized) return false;
+
+    try {
+      const { ref, set } = await import('https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js');
+      const productsRef = ref(this.db, 'products');
+      await set(productsRef, productsObject);
+      
+      console.log('✅ Products updated to Firebase:', Object.keys(productsObject).length);
+      
+      // Update localStorage sebagai backup
+      const productsArray = Object.values(productsObject);
+      localStorage.setItem('products', JSON.stringify(productsArray));
+      return true;
+    } catch (error) {
+      console.error('❌ Error updating products object:', error);
+      return false;
+    }
+  }
+
+  // Update settings di Firebase
+  async updateSettings(settings) {
+    if (!this.initialized) {
+      console.log('⚠️ Firebase not initialized, settings not synced');
+      return false;
+    }
+
     try {
       const { ref, set } = await import('https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js');
       const settingsRef = ref(this.db, 'settings');
       await set(settingsRef, settings);
+      
+      console.log('✅ Settings updated to Firebase');
       localStorage.setItem('settings', JSON.stringify(settings));
       return true;
     } catch (error) {
@@ -258,25 +255,104 @@ class FirebaseService {
     }
   }
 
-  // Update user data spesifik (ini sudah aman)
+  // Update user data spesifik - COMPLETELY FIXED
   async updateUser(userId, userData) {
-    if (!this.initialized) return false;
+    if (!this.initialized) {
+      console.log('⚠️ Firebase not initialized, user not synced');
+      return false;
+    }
+
     try {
-      const { ref, update } = await import('https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js');
+      const { ref, get, update } = await import('https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js');
+      
+      // Get current user data
       const userRef = ref(this.db, `users/${userId}`);
+      const snapshot = await get(userRef);
+      
+      if (!snapshot.exists()) {
+        console.error('❌ User not found in Firebase:', userId);
+        return false;
+      }
+      
+      // Update specific user node
       await update(userRef, userData);
-      console.log('✅ User updated to Firebase:', userId);
-      const users = JSON.parse(localStorage.getItem('users') || []);
+      
+      // Update localStorage
+      const users = JSON.parse(localStorage.getItem('users')) || [];
       const userIndex = users.findIndex(u => u.id == userId);
       if (userIndex !== -1) {
         users[userIndex] = { ...users[userIndex], ...userData };
         localStorage.setItem('users', JSON.stringify(users));
       }
+      
+      console.log('✅ User updated in Firebase:', userId);
       return true;
+      
     } catch (error) {
       console.error('❌ Error updating user:', error);
       return false;
     }
+  }
+
+  // Delete user - COMPLETELY FIXED
+  async deleteUser(userId) {
+    if (!this.initialized) {
+      console.log('⚠️ Firebase not initialized, user not deleted');
+      return false;
+    }
+
+    try {
+      const { ref, remove } = await import('https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js');
+      
+      // Delete specific user node
+      const userRef = ref(this.db, `users/${userId}`);
+      await remove(userRef);
+      
+      // Update localStorage
+      const users = JSON.parse(localStorage.getItem('users')) || [];
+      const filteredUsers = users.filter(u => u.id != userId);
+      localStorage.setItem('users', JSON.stringify(filteredUsers));
+      
+      console.log('✅ User deleted from Firebase:', userId);
+      return true;
+      
+    } catch (error) {
+      console.error('❌ Error deleting user:', error);
+      return false;
+    }
+  }
+
+  // Delete product - COMPLETELY FIXED
+  async deleteProduct(productId) {
+    if (!this.initialized) {
+      console.log('⚠️ Firebase not initialized, product not deleted');
+      return false;
+    }
+
+    try {
+      const { ref, remove } = await import('https://www.gstatic.com/firebasejs/9.6.1/firebase-database.js');
+      
+      // Delete specific product node
+      const productRef = ref(this.db, `products/${productId}`);
+      await remove(productRef);
+      
+      // Update localStorage
+      const products = JSON.parse(localStorage.getItem('products')) || [];
+      const filteredProducts = products.filter(p => p.id != productId);
+      localStorage.setItem('products', JSON.stringify(filteredProducts));
+      
+      console.log('✅ Product deleted from Firebase:', productId);
+      return true;
+      
+    } catch (error) {
+      console.error('❌ Error deleting product:', error);
+      return false;
+    }
+  }
+
+  // Validate admin access - NEW
+  validateAdminAccess(code) {
+    return code === this.adminCode;
   }
 
   // Stop listening untuk specific data type
