@@ -583,7 +583,7 @@ function shareProduct(productId) {
         document.getElementById('modalOverlay').classList.add('active');
         
         // Update links shared count
-        currentUser.linksShared = (currentUser.linksShared || 0) + 1;
+                currentUser.linksShared = (currentUser.linksShared || 0) + 1;
         localStorage.setItem('currentUser', JSON.stringify(currentUser));
         
         // Sync ke Firebase
@@ -816,8 +816,6 @@ function loadUsers() {
         console.log(`Menambahkan user ${index + 1}:`, user);
         const row = document.createElement('tr');
         row.innerHTML = `
-            <td>${user.email}</td>
-            <td>${user.phone}</td>
             <td>${user.email}</td>
             <td>${user.phone}</td>
             <td>${user.membership}</td>
@@ -1668,6 +1666,17 @@ function previewImage(event) {
     const currentImage = document.getElementById('currentImage');
     
     if (file) {
+        // Validate file
+        if (window.cloudinaryService) {
+            try {
+                window.cloudinaryService.validateFile(file);
+            } catch (error) {
+                showToast(error.message, 'error');
+                event.target.value = '';
+                return;
+            }
+        }
+        
         const reader = new FileReader();
         
         reader.onload = function(e) {
