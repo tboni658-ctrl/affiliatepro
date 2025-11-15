@@ -1352,7 +1352,7 @@ function generateTestimonials() {
         };
         
         // Add to beginning of array
-        testimonials.unshift(newTestimonial);
+        testimonials.push(newTestimonial);
         
         // Keep only last 20 testimonials
         if (testimonials.length > 20) {
@@ -1374,7 +1374,7 @@ function generateTestimonials() {
         const doubledTestimonials = [...testimonials, ...testimonials];
         
         doubledTestimonials.forEach((testimonial, index) => {
-            const isNew = index < testimonials.length && 
+            const isNew = index >= testimonials.length && 
                           (Date.now() - testimonial.timestamp) < 4000; // New if less than 4 seconds old
             
             const card = document.createElement('div');
