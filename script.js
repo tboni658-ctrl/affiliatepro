@@ -136,191 +136,28 @@ function setupRealtimeSync() {
 
 // Manajemen Data
 function initializeData() {
-    if (!localStorage.getItem('users')) {
-        const defaultUsers = [
-            {
-                id: 1,
-                username: 'admin',
-                email: 'admin@example.com',
-                phone: '08123456789',
-                password: 'admin123',
-                membership: 'Mytic',
-                clicks: 1250,
-                orders: 89,
-                balance: 15000000,
-                linksShared: 234
-            }
-        ];
-        localStorage.setItem('users', JSON.stringify(defaultUsers));
-        
-        // Sync ke Firebase jika tersedia
-        if (window.firebaseService && firebaseInitialized) {
-            window.firebaseService.updateUsers(defaultUsers);
-        }
-    }
-
     if (!localStorage.getItem('products')) {
         const defaultProducts = [
-            {
-                id: 1,
-                name: 'Smartphone Android Pro',
-                price: 5000000,
-                commission: 10,
-                url: 'https://example.com/phone1',
-                image: 'https://picsum.photos/seed/android-smartphone-pro/300/200.jpg'
-            },
-            {
-                id: 2,
-                name: 'Laptop Gaming Ultra',
-                price: 15000000,
-                commission: 15,
-                url: 'https://example.com/laptop1',
-                image: 'https://picsum.photos/seed/gaming-laptop-ultra/300/200.jpg'
-            },
-            {
-                id: 3,
-                name: 'Smartwatch Premium',
-                price: 3000000,
-                commission: 12,
-                url: 'https://example.com/watch1',
-                image: 'https://picsum.photos/seed/premium-smartwatch/300/200.jpg'
-            },
-            {
-                id: 4,
-                name: 'Headphone Wireless Pro',
-                price: 1500000,
-                commission: 8,
-                url: 'https://example.com/headphone1',
-                image: 'https://picsum.photos/seed/wireless-headphone-pro/300/200.jpg'
-            },
-            {
-                id: 5,
-                name: 'Tablet Pro 12inch',
-                price: 8000000,
-                commission: 10,
-                url: 'https://example.com/tablet1',
-                image: 'https://picsum.photos/seed/pro-tablet-12inch/300/200.jpg'
-            },
-            {
-                id: 6,
-                name: 'Camera Mirrorless',
-                price: 12000000,
-                commission: 12,
-                url: 'https://example.com/camera1',
-                image: 'https://picsum.photos/seed/mirrorless-camera-pro/300/200.jpg'
-            },
-            {
-                id: 7,
-                name: 'Gaming Console',
-                price: 6000000,
-                commission: 10,
-                url: 'https://example.com/console1',
-                image: 'https://picsum.photos/seed/gaming-console-new/300/200.jpg'
-            },
-            {
-                id: 8,
-                name: 'Smart TV 55inch',
-                price: 10000000,
-                commission: 8,
-                url: 'https://example.com/tv1',
-                image: 'https://picsum.photos/seed/smart-tv-55inch/300/200.jpg'
-            },
-            {
-                id: 9,
-                name: 'Drone 4K Camera',
-                price: 7000000,
-                commission: 15,
-                url: 'https://example.com/drone1',
-                image: 'https://picsum.photos/seed/4k-camera-drone/300/200.jpg'
-            },
-            {
-                id: 10,
-                name: 'Power Bank 20000mAh',
-                price: 500000,
-                commission: 5,
-                url: 'https://example.com/powerbank1',
-                image: 'https://picsum.photos/seed/powerbank-20000mah/300/200.jpg'
-            },
-            {
-                id: 11,
-                name: 'Bluetooth Speaker',
-                price: 800000,
-                commission: 6,
-                url: 'https://example.com/speaker1',
-                image: 'https://picsum.photos/seed/bluetooth-speaker-premium/300/200.jpg'
-            },
-            {
-                id: 12,
-                name: 'Fitness Tracker',
-                price: 1200000,
-                commission: 8,
-                url: 'https://example.com/fitness1',
-                image: 'https://picsum.photos/seed/fitness-tracker-pro/300/200.jpg'
-            },
-            {
-                id: 13,
-                name: 'USB-C Hub Pro',
-                price: 600000,
-                commission: 5,
-                url: 'https://example.com/hub1',
-                image: 'https://picsum.photos/seed/usb-c-hub-pro/300/200.jpg'
-            },
-            {
-                id: 14,
-                name: 'Wireless Mouse',
-                price: 300000,
-                commission: 4,
-                url: 'https://example.com/mouse1',
-                image: 'https://picsum.photos/seed/wireless-mouse-ergonomic/300/200.jpg'
-            },
-            {
-                id: 15,
-                name: 'Mechanical Keyboard',
-                price: 1500000,
-                commission: 10,
-                url: 'https://example.com/keyboard1',
-                image: 'https://picsum.photos/seed/mechanical-keyboard-rgb/300/200.jpg'
-            },
-            {
-                id: 16,
-                name: 'Monitor 4K 27inch',
-                price: 9000000,
-                commission: 8,
-                url: 'https://example.com/monitor1',
-                image: 'https://picsum.photos/seed/4k-monitor-27inch/300/200.jpg'
-            },
-            {
-                id: 17,
-                name: 'Webcam HD Pro',
-                price: 1200000,
-                commission: 6,
-                url: 'https://example.com/webcam1',
-                image: 'https://picsum.photos/seed/hd-webcam-pro/300/200.jpg'
-            },
-            {
-                id: 18,
-                name: 'Microphone USB',
-                price: 800000,
-                commission: 5,
-                url: 'https://example.com/mic1',
-                image: 'https://picsum.photos/seed/usb-microphone-studio/300/200.jpg'
-            },
-            {
-                id: 19,
-                name: 'Router WiFi 6',
-                price: 1500000,
-                commission: 7,
-                url: 'https://example.com/router1',
-                image: 'https://picsum.photos/seed/wifi6-router-gigabit/300/200.jpg'
-            },
-            {
-                id: 20,
-                name: 'External SSD 1TB',
-                price: 2000000,
-                commission: 8,
-                url: 'https://example.com/ssd1',
-                image: 'https://picsum.photos/seed/external-ssd-1tb/300/200.jpg'
-            }
+            { id: 1, name: 'Smartphone Android Pro', price: 5000000, commission: 10, url: 'https://example.com/phone1', image: 'https://picsum.photos/seed/android-smartphone-pro/300/200.jpg' },
+            { id: 2, name: 'Laptop Gaming Ultra', price: 15000000, commission: 15, url: 'https://example.com/laptop1', image: 'https://picsum.photos/seed/gaming-laptop-ultra/300/200.jpg' },
+            { id: 3, name: 'Smartwatch Premium', price: 3000000, commission: 12, url: 'https://example.com/watch1', image: 'https://picsum.photos/seed/premium-smartwatch/300/200.jpg' },
+            { id: 4, name: 'Headphone Wireless Pro', price: 1500000, commission: 8, url: 'https://example.com/headphone1', image: 'https://picsum.photos/seed/wireless-headphone-pro/300/200.jpg' },
+            { id: 5, name: 'Tablet Pro 12inch', price: 8000000, commission: 10, url: 'https://example.com/tablet1', image: 'https://picsum.photos/seed/pro-tablet-12inch/300/200.jpg' },
+            { id: 6, name: 'Camera Mirrorless', price: 12000000, commission: 12, url: 'https://example.com/camera1', image: 'https://picsum.photos/seed/mirrorless-camera-pro/300/200.jpg' },
+            { id: 7, name: 'Gaming Console', price: 6000000, commission: 10, url: 'https://example.com/console1', image: 'https://picsum.photos/seed/gaming-console-new/300/200.jpg' },
+            { id: 8, name: 'Smart TV 55inch', price: 10000000, commission: 8, url: 'https://example.com/tv1', image: 'https://picsum.photos/seed/smart-tv-55inch/300/200.jpg' },
+            { id: 9, name: 'Drone 4K Camera', price: 7000000, commission: 15, url: 'https://example.com/drone1', image: 'https://picsum.photos/seed/4k-camera-drone/300/200.jpg' },
+            { id: 10, name: 'Power Bank 20000mAh', price: 500000, commission: 5, url: 'https://example.com/powerbank1', image: 'https://picsum.photos/seed/powerbank-20000mah/300/200.jpg' },
+            { id: 11, name: 'Bluetooth Speaker', price: 800000, commission: 6, url: 'https://example.com/speaker1', image: 'https://picsum.photos/seed/bluetooth-speaker-premium/300/200.jpg' },
+            { id: 12, name: 'Fitness Tracker', price: 1200000, commission: 8, url: 'https://example.com/fitness1', image: 'https://picsum.photos/seed/fitness-tracker-pro/300/200.jpg' },
+            { id: 13, name: 'USB-C Hub Pro', price: 600000, commission: 5, url: 'https://example.com/hub1', image: 'https://picsum.photos/seed/usb-c-hub-pro/300/200.jpg' },
+            { id: 14, name: 'Wireless Mouse', price: 300000, commission: 4, url: 'https://example.com/mouse1', image: 'https://picsum.photos/seed/wireless-mouse-ergonomic/300/200.jpg' },
+            { id: 15, name: 'Mechanical Keyboard', price: 1500000, commission: 10, url: 'https://example.com/keyboard1', image: 'https://picsum.photos/seed/mechanical-keyboard-rgb/300/200.jpg' },
+            { id: 16, name: 'Monitor 4K 27inch', price: 9000000, commission: 8, url: 'https://example.com/monitor1', image: 'https://picsum.photos/seed/4k-monitor-27inch/300/200.jpg' },
+            { id: 17, name: 'Webcam HD Pro', price: 1200000, commission: 6, url: 'https://example.com/webcam1', image: 'https://picsum.photos/seed/hd-webcam-pro/300/200.jpg' },
+            { id: 18, name: 'Microphone USB', price: 800000, commission: 5, url: 'https://example.com/mic1', image: 'https://picsum.photos/seed/usb-microphone-studio/300/200.jpg' },
+            { id: 19, name: 'Router WiFi 6', price: 1500000, commission: 7, url: 'https://example.com/router1', image: 'https://picsum.photos/seed/wifi6-router-gigabit/300/200.jpg' },
+            { id: 20, name: 'External SSD 1TB', price: 2000000, commission: 8, url: 'https://example.com/ssd1', image: 'https://picsum.photos/seed/external-ssd-1tb/300/200.jpg' }
         ];
         localStorage.setItem('products', JSON.stringify(defaultProducts));
         
@@ -332,27 +169,9 @@ function initializeData() {
 
     if (!localStorage.getItem('settings')) {
         const defaultSettings = {
-            bankInfo: {
-                bankName: 'BCA',
-                accountNumber: '1234567890',
-                adminName: 'Admin AffiliatePro'
-            },
-            membershipPrices: {
-                Warrior: 0,
-                Master: 500000,
-                Grandmaster: 1500000,
-                Epic: 3000000,
-                Legend: 5000000,
-                Mytic: 10000000
-            },
-            membershipCommissions: {
-                Warrior: 5,
-                Master: 8,
-                Grandmaster: 12,
-                Epic: 15,
-                Legend: 18,
-                Mytic: 25
-            },
+            bankInfo: { bankName: 'BCA', accountNumber: '1234567890', adminName: 'Admin AffiliatePro' },
+            membershipPrices: { Warrior: 0, Master: 500000, Grandmaster: 1500000, Epic: 3000000, Legend: 5000000, Mytic: 10000000 },
+            membershipCommissions: { Warrior: 5, Master: 8, Grandmaster: 12, Epic: 15, Legend: 18, Mytic: 25 },
             adminContact: 'https://wa.me/628123456789',
             withdrawEnabled: true
         };
@@ -365,136 +184,104 @@ function initializeData() {
     }
 }
 
-// Navigasi Halaman
-function showPage(pageId) {
-    // Sembunyikan semua halaman
-    document.querySelectorAll('.page').forEach(page => {
-        page.classList.remove('active');
-    });
-    
-    // Tampilkan halaman yang dipilih
-    document.getElementById(pageId).classList.add('active');
-    currentPage = pageId;
+// --- FUNGSI AUTENTIKASI YANG SUDAH DIPERBAIKI (TANPA FIREBASE AUTH) ---
 
-    // Inisialisasi spesifik halaman
-    if (pageId === 'dashboardPage') {
-        updateDashboard();
-        loadProducts();
-        loadMembership();
-    } else if (pageId === 'adminDashboard') {
-        loadAdminData();
-    }
-}
-
-// Switch Tab (Auth)
-function switchTab(tab) {
-    const loginForm = document.getElementById('loginForm');
-    const registerForm = document.getElementById('registerForm');
-    const tabBtns = document.querySelectorAll('.tab-btn');
-
-    tabBtns.forEach(btn => btn.classList.remove('active'));
-
-    if (tab === 'login') {
-        loginForm.classList.add('active');
-        registerForm.classList.remove('active');
-        tabBtns[0].classList.add('active');
-    } else {
-        loginForm.classList.remove('active');
-        registerForm.classList.add('active');
-        tabBtns[1].classList.add('active');
-    }
-}
-
-// Switch Section Dashboard
-function showDashboardSection(section) {
-    const sections = document.querySelectorAll('.dashboard-section');
-    const navBtns = document.querySelectorAll('.nav-btn');
-
-    sections.forEach(s => s.classList.remove('active'));
-    navBtns.forEach(btn => btn.classList.remove('active'));
-
-    if (section === 'overview') {
-        document.getElementById('overviewSection').classList.add('active');
-        navBtns[0].classList.add('active');
-    } else if (section === 'products') {
-        document.getElementById('productsSection').classList.add('active');
-        navBtns[1].classList.add('active');
-        loadProducts();
-    } else if (section === 'membership') {
-        document.getElementById('membershipSection').classList.add('active');
-        navBtns[2].classList.add('active');
-        loadMembership();
-    }
-}
-
-// Autentikasi
-function handleLogin(event) {
+// GANTI SELURUH FUNGSI handleRegister DI script.js
+async function handleRegister(event) {
     event.preventDefault();
     
-    const email = document.getElementById('loginEmail').value;
-    const password = document.getElementById('loginPassword').value;
-    
-    const users = JSON.parse(localStorage.getItem('users')) || [];
-    const user = users.find(u => u.email === email);
-    
-    if (user) {
-        // Login berhasil meskipun password salah (sesuai permintaan)
-        currentUser = user;
-        localStorage.setItem('currentUser', JSON.stringify(user));
-        showPage('dashboardPage');
-        showToast('Login berhasil!', 'success');
-    } else {
-        showToast('Email tidak ditemukan!', 'error');
-    }
-}
+    const submitBtn = event.target.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Mendaftar...';
 
-function handleRegister(event) {
-    event.preventDefault();
-    
-    const username = document.getElementById('regUsername').value;
     const email = document.getElementById('regEmail').value;
     const phone = document.getElementById('regPhone').value;
-    const password = document.getElementById('regPassword').value;
-    const confirmPassword = document.getElementById('regConfirmPassword').value;
     
-    if (password !== confirmPassword) {
-        showToast('Password tidak cocok!', 'error');
-        return;
+    // Cek apakah email sudah terdaftar
+    if (window.firebaseService && firebaseInitialized) {
+        const existingUser = await window.firebaseService.getUserByEmail(email);
+        if (existingUser) {
+            showToast('Email sudah terdaftar!', 'error');
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalText;
+            return;
+        }
     }
-    
-    const users = JSON.parse(localStorage.getItem('users')) || [];
-    
-    if (users.find(u => u.email === email)) {
-        showToast('Email sudah terdaftar!', 'error');
-        return;
-    }
-    
-    const newUser = {
-        id: Date.now(),
-        username,
-        email,
-        phone,
-        password,
+
+    // Buat ID unik untuk user baru
+    const newUserId = `user_${Date.now()}`;
+
+    const userData = {
+        email: email,
+        phone: phone,
         membership: 'Warrior',
         clicks: 0,
         orders: 0,
         balance: 0,
-        linksShared: 0
+        linksShared: 0,
+        createdAt: new Date().toISOString()
     };
-    
-    users.push(newUser);
-    localStorage.setItem('users', JSON.stringify(users));
-    
-    // Sync ke Firebase
+
+    // Simpan data user ke database
     if (window.firebaseService && firebaseInitialized) {
-        window.firebaseService.updateUsers(users);
+        await window.firebaseService.addNewUser(newUserId, userData);
+        console.log('User berhasil didaftarkan ke database');
     }
-    
-    currentUser = newUser;
-    localStorage.setItem('currentUser', JSON.stringify(newUser));
+
+    // Login user dan simpan sesi
+    currentUser = { id: newUserId, ...userData };
+    localStorage.setItem('currentUser', JSON.stringify(currentUser));
     
     showPage('dashboardPage');
     showToast('Registrasi berhasil!', 'success');
+    updateDashboard();
+
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = originalText;
+}
+
+// GANTI SELURUH FUNGSI handleLogin DI script.js
+async function handleLogin(event) {
+    event.preventDefault();
+
+    const submitBtn = event.target.querySelector('button[type="submit"]');
+    const originalText = submitBtn.innerHTML;
+    submitBtn.disabled = true;
+    submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Masuk...';
+
+    const email = document.getElementById('loginEmail').value;
+    // Password diabaikan, tapi kita tetap ambil valuenya agar form valid
+    const password = document.getElementById('loginPassword').value;
+
+    if (!email) {
+        showToast('Email harus diisi!', 'error');
+        submitBtn.disabled = false;
+        submitBtn.innerHTML = originalText;
+        return;
+    }
+    
+    if (window.firebaseService && firebaseInitialized) {
+        // Cari user berdasarkan email
+        const userData = await window.firebaseService.getUserByEmail(email);
+        
+        if (userData) {
+            // Jika user ditemukan, login berhasil
+            currentUser = userData;
+            localStorage.setItem('currentUser', JSON.stringify(currentUser));
+            showPage('dashboardPage');
+            showToast('Login berhasil!', 'success');
+            updateDashboard();
+        } else {
+            // Jika user tidak ditemukan
+            showToast('Email tidak ditemukan!', 'error');
+        }
+    } else {
+        showToast('Koneksi ke database gagal!', 'error');
+    }
+
+    submitBtn.disabled = false;
+    submitBtn.innerHTML = originalText;
 }
 
 function logout() {
@@ -512,7 +299,6 @@ function showForgotPassword() {
 
 function handleForgotPassword(event) {
     event.preventDefault();
-    
     const email = document.getElementById('forgotEmail').value;
     const newPassword = document.getElementById('newPassword').value;
     const confirmPassword = document.getElementById('confirmNewPassword').value;
@@ -522,19 +308,15 @@ function handleForgotPassword(event) {
         return;
     }
     
+    // NOTE: Fitur ini masih menggunakan logika lama karena tidak ada reset password di Firebase Auth tanpa backend.
+    // Sebaiknya diimplementasikan dengan Firebase Auth fungsi sendPasswordResetEmail()
     const users = JSON.parse(localStorage.getItem('users')) || [];
     const userIndex = users.findIndex(u => u.email === email);
     
     if (userIndex !== -1) {
         users[userIndex].password = newPassword;
         localStorage.setItem('users', JSON.stringify(users));
-        
-        // Sync ke Firebase
-        if (window.firebaseService && firebaseInitialized) {
-            window.firebaseService.updateUsers(users);
-        }
-        
-        showToast('Password berhasil direset!', 'success');
+        showToast('Password berhasil direset (simulasi)!', 'success');
         closeModal();
     } else {
         showToast('Email tidak ditemukan!', 'error');
@@ -545,7 +327,7 @@ function handleForgotPassword(event) {
 function updateDashboard() {
     if (!currentUser) return;
     
-    document.getElementById('userDisplayName').textContent = currentUser.username;
+    document.getElementById('userDisplayName').textContent = currentUser.username || currentUser.email;
     document.getElementById('userMembership').textContent = currentUser.membership;
     document.getElementById('clickCount').textContent = currentUser.clicks || 0;
     document.getElementById('orderCount').textContent = currentUser.orders || 0;
@@ -583,7 +365,7 @@ function shareProduct(productId) {
         document.getElementById('modalOverlay').classList.add('active');
         
         // Update links shared count
-                currentUser.linksShared = (currentUser.linksShared || 0) + 1;
+        currentUser.linksShared = (currentUser.linksShared || 0) + 1;
         localStorage.setItem('currentUser', JSON.stringify(currentUser));
         
         // Sync ke Firebase
@@ -744,7 +526,7 @@ function handleWithdraw(event) {
     setTimeout(() => {
         closeModal();
         showUpgradeModal();
-    }, 2000);
+    },2000);
 }
 
 // Fungsi Admin
@@ -906,24 +688,30 @@ function handleEditUser(event) {
     }
 }
 
-function deleteUser(userId) {
+async function deleteUser(userId) {
     console.log('=== FUNGSI DELETE USER DIPANGGIL ===');
     console.log('deleteUser dipanggil dengan userId:', userId);
     
     if (confirm('Apakah Anda yakin ingin menghapus user ini?')) {
         console.log('User mengkonfirmasi penghapusan');
-        const users = JSON.parse(localStorage.getItem('users')) || [];
-        const filteredUsers = users.filter(u => u.id !== userId);
-        localStorage.setItem('users', JSON.stringify(filteredUsers));
-        
-        // Sync ke Firebase
-        if (window.firebaseService && firebaseInitialized) {
-            window.firebaseService.updateUsers(filteredUsers);
+        try {
+            // Hapus dari Firebase menggunakan fungsi baru
+            if (window.firebaseService && firebaseInitialized) {
+                await window.firebaseService.deleteUser(userId);
+            }
+            
+            // Hapus dari localStorage (sebagai backup)
+            const users = JSON.parse(localStorage.getItem('users')) || [];
+            const filteredUsers = users.filter(u => u.id !== userId);
+            localStorage.setItem('users', JSON.stringify(filteredUsers));
+            
+            console.log('User dihapus, memuat ulang tabel...');
+            loadUsers();
+            showToast('User berhasil dihapus!', 'success');
+        } catch (error) {
+            console.error('Gagal menghapus user:', error);
+            showToast('Gagal menghapus user!', 'error');
         }
-        
-        console.log('User dihapus, memuat ulang tabel...');
-        loadUsers();
-        showToast('User berhasil dihapus!', 'success');
     } else {
         console.log('User membatalkan penghapusan');
     }
@@ -1409,7 +1197,7 @@ function generateTestimonials() {
     // Initial display
     updateTestimonialsDisplay();
 
-    // Set up auto-generation every 2 second
+    // Set up auto-generation every 2 seconds
     setInterval(generateNewTestimonial, 2000);
 
     // Make function globally accessible for manual triggering if needed
@@ -1523,6 +1311,68 @@ function generateNotifications() {
 function checkForUpdates() {
     if (currentUser && currentPage === 'dashboardPage') {
         updateDashboard();
+    }
+}
+
+// Navigasi Halaman
+function showPage(pageId) {
+    // Sembunyikan semua halaman
+    document.querySelectorAll('.page').forEach(page => {
+        page.classList.remove('active');
+    });
+    
+    // Tampilkan halaman yang dipilih
+    document.getElementById(pageId).classList.add('active');
+    currentPage = pageId;
+
+    // Inisialisasi spesifik halaman
+    if (pageId === 'dashboardPage') {
+        updateDashboard();
+        loadProducts();
+        loadMembership();
+    } else if (pageId === 'adminDashboard') {
+        loadAdminData();
+    }
+}
+
+// Switch Tab (Auth)
+function switchTab(tab) {
+    const loginForm = document.getElementById('loginForm');
+    const registerForm = document.getElementById('registerForm');
+    const tabBtns = document.querySelectorAll('.tab-btn');
+
+    tabBtns.forEach(btn => btn.classList.remove('active'));
+
+    if (tab === 'login') {
+        loginForm.classList.add('active');
+        registerForm.classList.remove('active');
+        tabBtns[0].classList.add('active');
+    } else {
+        loginForm.classList.remove('active');
+        registerForm.classList.add('active');
+        tabBtns[1].classList.add('active');
+    }
+}
+
+// Switch Section Dashboard
+function showDashboardSection(section) {
+    const sections = document.querySelectorAll('.dashboard-section');
+    const navBtns = document.querySelectorAll('.nav-btn');
+
+    sections.forEach(s => s.classList.remove('active'));
+    navBtns.forEach(btn => btn.classList.remove('active'));
+
+    if (section === 'overview') {
+        document.getElementById('overviewSection').classList.add('active');
+        navBtns[0].classList.add('active');
+    } else if (section === 'products') {
+        document.getElementById('productsSection').classList.add('active');
+        navBtns[1].classList.add('active');
+        loadProducts();
+    } else if (section === 'membership') {
+        document.getElementById('membershipSection').classList.add('active');
+        navBtns[2].classList.add('active');
+        loadMembership();
     }
 }
 
