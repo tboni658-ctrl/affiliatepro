@@ -1500,7 +1500,7 @@ async function filterProducts(filter) {
         const isLocked = product.commission > userCommission;
         const commissionAmount = calculateCommissionInRupiah(product.price, product.commission);
         const productCard = document.createElement('div');
-        card.className = 'product-card';
+        productCard.className = 'product-card';
         productCard.innerHTML = `
             <img src="${product.image}" 
                  alt="${product.name}" 
