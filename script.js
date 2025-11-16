@@ -1728,7 +1728,7 @@ async function generateNotifications() {
         const scrollContainer = document.createElement('div');
         scrollContainer.className = 'notifications-track';
         // Durasi scroll dipercepat dari 25s menjadi 15s
-        scrollContainer.style.animation = 'scrollNotifications 60s linear infinite';
+        scrollContainer.style.animation = 'scrollNotifications 25s linear infinite';
         
         // Create dua set untuk smooth looping
         const doubledNotifications = [...notifications, ...notifications];
@@ -1751,8 +1751,8 @@ async function generateNotifications() {
     // Initial display
     updateNotificationsDisplay();
 
-    // Set up auto-generation setiap 5 detik (dari 10 detik)
-    setInterval(generateNewNotification, 5000);
+    // Set up auto-generation setiap 30 menit (dari 10 detik)
+    setInterval(generateNewNotification, 1800000);
 
     // Make function globally accessible
     window.generateNewNotification = generateNewNotification;
