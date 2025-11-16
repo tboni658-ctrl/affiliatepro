@@ -315,7 +315,7 @@ body {
     color: var(--text-secondary);
 }
 
-/* Testimonials Section */
+/* Testimonials Section - Updated untuk 27 item */
 .testimonials {
     padding: 40px 0;
     background: rgba(255, 255, 255, 0.02);
@@ -334,7 +334,8 @@ body {
 .testimonials-track {
     display: flex;
     gap: 20px;
-    animation: scrollTestimonials 30s linear infinite;
+    /* Durasi disesuaikan untuk 27 item - lebih lambat agar tidak terlalu cepat */
+    animation: scrollTestimonials 90s linear infinite;
     padding: 0 20px;
 }
 
@@ -353,12 +354,6 @@ body {
     transform: translateY(-5px);
     background: rgba(255, 255, 255, 0.08);
     border-color: var(--accent-cyan);
-}
-
-.testimonial-card.new {
-    background: rgba(76, 175, 80, 0.1);
-    border-color: var(--success);
-    animation: slideInTestimonial 0.5s ease-out, pulseTestimonial 2s infinite;
 }
 
 .testimonial-header {
@@ -400,17 +395,6 @@ body {
     text-shadow: 0 0 2px rgba(255, 215, 0, 0.5);
 }
 
-.new-badge {
-    background: var(--success);
-    color: white;
-    padding: 2px 6px;
-    border-radius: 10px;
-    font-size: 10px;
-    font-weight: 600;
-    margin-left: 5px;
-    animation: blink 1s infinite;
-}
-
 .testimonial-text {
     font-size: clamp(11px, 3vw, 13px);
     color: var(--text-secondary);
@@ -418,49 +402,9 @@ body {
     font-style: italic;
 }
 
-.testimonial-time {
-    position: absolute;
-    top: 10px;
-    right: 10px;
-    background: var(--success);
-    color: white;
-    padding: 3px 8px;
-    border-radius: 10px;
-    font-size: 10px;
-    font-weight: 600;
-}
-
 @keyframes scrollTestimonials {
     0% { transform: translateX(-50%); }
     100% { transform: translateX(0); }
-}
-
-@keyframes slideInTestimonial {
-    from {
-        opacity: 0;
-        transform: translateX(-20px) scale(0.95);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0) scale(1);
-    }
-}
-
-@keyframes pulseTestimonial {
-    0% {
-        box-shadow: 0 0 0 0 rgba(76, 175, 80, 0.7);
-    }
-    70% {
-        box-shadow: 0 0 0 10px rgba(76, 175, 80, 0);
-    }
-    100% {
-        box-shadow: 0 0 0 0 rgba(76, 175, 80, 0);
-    }
-}
-
-@keyframes blink {
-    0%, 50%, 100% { opacity: 1; }
-    25%, 75% { opacity: 0.5; }
 }
 
 .testimonials-scroll:hover .testimonials-track {
@@ -803,7 +747,7 @@ body {
     color: var(--text-secondary);
 }
 
-/* Withdrawal Notifications */
+/* Withdrawal Notifications - Updated untuk kecepatan lebih cepat */
 .withdrawal-notifications {
     background: rgba(255, 255, 255, 0.05);
     border: 1px solid var(--border);
@@ -844,7 +788,8 @@ body {
     flex-direction: column;
     gap: 8px;
     padding: 8px 0;
-    animation: scrollNotifications 25s linear infinite;
+    /* Durasi dipercepat dari 25s menjadi 15s */
+    animation: scrollNotifications 15s linear infinite;
 }
 
 .notification-item {
@@ -1924,7 +1869,8 @@ body {
         display: flex !important;
         gap: 15px !important;
         padding: 0 15px !important;
-        animation: scrollTestimonials 20s linear infinite !important;
+        /* Durasi mobile sedikit lebih cepat */
+        animation: scrollTestimonials 60s linear infinite !important;
     }
     
     .testimonial-card {
@@ -1961,6 +1907,12 @@ body {
     .container {
         padding: 0 15px;
     }
+    
+    /* Notifications mobile */
+    .notifications-track {
+        /* Durasi mobile lebih cepat lagi */
+        animation: scrollNotifications 10s linear infinite !important;
+    }
 }
 
 /* Very small mobile */
@@ -1992,11 +1944,11 @@ body {
 /* Touch optimizations */
 @media (hover: none) {
     .testimonials-track {
-        animation: scrollTestimonials 25s linear infinite;
+        animation: scrollTestimonials 90s linear infinite;
     }
     
     .notifications-track {
-        animation: scrollNotifications 30s linear infinite;
+        animation: scrollNotifications 15s linear infinite;
     }
 }
 
