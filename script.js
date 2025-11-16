@@ -583,7 +583,7 @@ function loadMoreProducts() {
     showToast('Upgrade membership untuk melihat lebih banyak produk!', 'error');
 }
 
-function shareProduct(productId) {
+async function shareProduct(productId) {
     const productsGrid = document.getElementById('productsGrid');
     const productCards = productsGrid.querySelectorAll('.product-card');
     
@@ -597,13 +597,17 @@ function shareProduct(productId) {
             const image = card.querySelector('.product-image').src;
             
             const price = parseInt(priceText.replace(/[^0-9]/g, ''));
-            const commission = parseInt(commissionText.replace(/[^0-9]/g, ''));
+            // Extract commission percentage from text like "Komisi: 10% (Rp 500.000)"
+            const commissionMatch = commissionText.match(/Komisi: (\d+)%/);
+            const commission = commissionMatch ? parseInt(commissionMatch[1]) : 0;
+            const commissionAmount = calculateCommissionInRupiah(price, commission);
             
             product = {
                 id: productId,
                 name,
                 price,
                 commission,
+                commissionAmount,
                 image,
                 url: `https://example.com/product/${productId}`
             };
@@ -616,7 +620,7 @@ function shareProduct(productId) {
         document.getElementById('productModalImage').src = product.image;
         document.getElementById('productModalName').textContent = product.name;
         document.getElementById('productModalPrice').textContent = formatCurrency(product.price);
-        document.getElementById('productModalCommission').textContent = product.commission + '%';
+        document.getElementById('productModalCommission').textContent = `${product.commission}% (${formatCurrency(product.commissionAmount)})`;
         
         document.getElementById('productModal').classList.add('active');
         document.getElementById('modalOverlay').classList.add('active');
@@ -689,10 +693,14 @@ async function loadMembership() {
         'Mytic': 'fa-star'
     };
     
+    // Contoh produk dengan harga rata-rata untuk menghitung estimasi komisi
+    const sampleProductPrice = 5000000; // Rp 5.000.000
+    
     levels.forEach(level => {
         const isCurrentLevel = currentUser.membership === level;
         const price = settings.membershipPrices?.[level] || 0;
         const commission = settings.membershipCommissions?.[level] || 0;
+        const estimatedCommission = calculateCommissionInRupiah(sampleProductPrice, commission);
         
         const card = document.createElement('div');
         card.className = `membership-card ${isCurrentLevel ? 'current' : ''}`;
@@ -702,7 +710,7 @@ async function loadMembership() {
                 <h3 class="membership-level">${level}</h3>
             </div>
             <div class="membership-body">
-                <div class="membership-commission">Komisi: ${commission}%</div>
+                <div class="membership-commission">Komisi: ${commission}% (${formatCurrency(estimatedCommission)} dari produk Rp 5.000.000)</div>
                 <div class="membership-price">Harga: ${price === 0 ? 'Gratis' : formatCurrency(price)}</div>
                 <ul class="membership-features">
                     <li><i class="fas fa-check"></i> Akses ke ${level === 'Warrior' ? '10' : level === 'Master' ? '25' : level === 'Grandmaster' ? '50' : level === 'Epic' ? '100' : level === 'Legend' ? '150' : 'Semua'} produk</li>
@@ -1027,11 +1035,12 @@ async function loadAdminProducts() {
     tbody.innerHTML = '';
     
     products.forEach(product => {
+        const commissionAmount = calculateCommissionInRupiah(product.price, product.commission);
         const row = document.createElement('tr');
         row.innerHTML = `
             <td>${product.name}</td>
             <td>${formatCurrency(product.price)}</td>
-            <td>${product.commission}%</td>
+            <td>${product.commission}% (${formatCurrency(commissionAmount)})</td>
             <td>${product.url}</td>
             <td><img src="${product.image}" alt="${product.name}" style="width: 50px; height: 50px; object-fit: cover; border-radius: 4px;"></td>
             <td class="table-actions">
@@ -1489,8 +1498,9 @@ async function filterProducts(filter) {
 
     productsToShow.forEach(product => {
         const isLocked = product.commission > userCommission;
+        const commissionAmount = calculateCommissionInRupiah(product.price, product.commission);
         const productCard = document.createElement('div');
-        productCard.className = 'product-card';
+        card.className = 'product-card';
         productCard.innerHTML = `
             <img src="${product.image}" 
                  alt="${product.name}" 
@@ -1499,7 +1509,7 @@ async function filterProducts(filter) {
             <div class="product-info">
                 <h3 class="product-name">${product.name}</h3>
                 <p class="product-price">Harga: ${formatCurrency(product.price)}</p>
-                <p class="product-commission">Komisi: ${product.commission}%</p>
+                <p class="product-commission">Komisi: ${product.commission}% (${formatCurrency(commissionAmount)})</p>
                 <div class="product-actions">
                     ${isLocked ? 
                         `<button class="locked" onclick="showUpgradeModal()">
@@ -1531,6 +1541,17 @@ function formatCurrency(amount) {
         currency: 'IDR',
         minimumFractionDigits: 0
     }).format(amount);
+}
+
+// Fungsi untuk menghitung komisi dalam rupiah
+function calculateCommissionInRupiah(price, commissionPercentage) {
+    return Math.round(price * commissionPercentage / 100);
+}
+
+// Fungsi untuk menampilkan komisi dengan format yang lebih baik
+function formatCommissionDisplay(price, commissionPercentage) {
+    const commissionAmount = calculateCommissionInRupiah(price, commissionPercentage);
+    return `${commissionPercentage}% (${formatCurrency(commissionAmount)})`;
 }
 
 // Toast Notification Function
@@ -1570,33 +1591,33 @@ async function generateTestimonials() {
 
     // Array 27 testimoni statis
     const testimonials = [
-        { id: 1, name: 'Budi Santoso', text: 'Sudah 3 bulan bergabung, komisi selalu tepat waktu!', rating: 5 },
-        { id: 2, name: 'Siti Nurhaliza', text: 'Mudah sekali dapat uang dari HP, recommended!', rating: 5 },
-        { id: 3, name: 'Ahmad Fauzi', text: 'Program affiliate terbaik yang pernah saya ikuti.', rating: 5 },
-        { id: 4, name: 'Dewi Lestari', text: 'Komisi besar dan produknya berkualitas.', rating: 5 },
-        { id: 5, name: 'Rudi Hermawan', text: 'Sudah withdraw 5 kali, lancar semua!', rating: 5 },
-        { id: 6, name: 'Maya Sari', text: 'Dari nol sekarang punya penghasilan tetap!', rating: 5 },
-        { id: 7, name: 'Doni Prasetyo', text: 'Admin responsif, sistem transparan!', rating: 5 },
-        { id: 8, name: 'Lina Wijaya', text: 'Modal HP saja sudah bisa hasilkan jutaan!', rating: 5 },
-        { id: 9, name: 'Hendra Kusuma', text: 'Best affiliate program di Indonesia!', rating: 5 },
-        { id: 10, name: 'Sarah Amalia', text: 'Komisi jutaan setiap bulan, mantap!', rating: 5 },
-        { id: 11, name: 'Fajar Nugroho', text: 'Sudah beli motor dari komisi ini!', rating: 5 },
-        { id: 12, name: 'Indah Puspita', text: 'Upgrade membership worth it banget!', rating: 5 },
-        { id: 13, name: 'Bayu Setiawan', text: 'Sistemnya bagus dan terpercaya!', rating: 5 },
-        { id: 14, name: 'Ratna Permata', text: 'Rekomendasi banget buat pemula!', rating: 5 },
-        { id: 15, name: 'Rizki Hidayat', text: 'Admin ramah, komisi selalu dibayar!', rating: 5 },
-        { id: 16, name: 'Andi Susanto', text: 'Produknya mudah dijual, komisi besar!', rating: 5 },
-        { id: 17, name: 'Diana Kartika', text: 'Sudah 6 bulan bergabung, tidak pernah kecewa!', rating: 5 },
-        { id: 18, name: 'Eko Pratama', text: 'Program yang mengubah hidup saya!', rating: 5 },
-        { id: 19, name: 'Fitri Handayani', text: 'Komisi besar, produk laku keras!', rating: 5 },
-        { id: 20, name: 'Gilang Wibowo', text: 'Dapat bonus tambahan setiap bulan!', rating: 5 },
-        { id: 21, name: 'Citra Dewi', text: 'Sangat puas dengan pelayanan admin!', rating: 5 },
-        { id: 22, name: 'Reza Pahlevi', text: 'Modal kecil, untung besar!', rating: 5 },
-        { id: 23, name: 'Nina Susanti', text: 'Sudah ajak teman-teman, semua suka!', rating: 5 },
-        { id: 24, name: 'Omar Hakim', text: 'Affiliate termudah yang pernah ada!', rating: 5 },
-        { id: 25, name: 'Putri Indah', text: 'Dapat komisi tiap hari, seru!', rating: 5 },
-        { id: 26, name: 'Qori Ahmad', text: 'Sistem pembayaran paling cepat!', rating: 5 },
-        { id: 27, name: 'Rani Amelia', text: 'Recommended banget untuk semua kalangan!', rating: 5 }
+        { id: 1, name: 'Budi Santoso', text: 'Sudah 3 bulan bergabung, komisi selalu tepat waktu! Dapat Rp 2.500.000/bulan.', rating: 5 },
+        { id: 2, name: 'Siti Nurhaliza', text: 'Mudah sekali dapat uang dari HP, recommended! Sudah dapat Rp 3.000.000.', rating: 5 },
+        { id: 3, name: 'Ahmad Fauzi', text: 'Program affiliate terbaik yang pernah saya ikuti. Komisi Rp 4.200.000/bulan.', rating: 5 },
+        { id: 4, name: 'Dewi Lestari', text: 'Komisi besar dan produknya berkualitas. Dapat Rp 5.500.000/bulan.', rating: 5 },
+        { id: 5, name: 'Rudi Hermawan', text: 'Sudah withdraw 5 kali, lancar semua! Total Rp 15.000.000.', rating: 5 },
+        { id: 6, name: 'Maya Sari', text: 'Dari nol sekarang punya penghasilan tetap! Rp 3.800.000/bulan.', rating: 5 },
+        { id: 7, name: 'Doni Prasetyo', text: 'Admin responsif, sistem transparan! Komisi Rp 4.100.000/bulan.', rating: 5 },
+        { id: 8, name: 'Lina Wijaya', text: 'Modal HP saja sudah bisa hasilkan jutaan! Rp 2.900.000/bulan.', rating: 5 },
+        { id: 9, name: 'Hendra Kusuma', text: 'Best affiliate program di Indonesia! Dapat Rp 6.200.000/bulan.', rating: 5 },
+        { id: 10, name: 'Sarah Amalia', text: 'Komisi jutaan setiap bulan, mantap! Rp 5.100.000/bulan.', rating: 5 },
+        { id: 11, name: 'Fajar Nugroho', text: 'Sudah beli motor dari komisi ini! Total Rp 18.000.000.', rating: 5 },
+        { id: 12, name: 'Indah Puspita', text: 'Upgrade membership worth it banget! Komisi Rp 7.500.000/bulan.', rating: 5 },
+        { id: 13, name: 'Bayu Setiawan', text: 'Sistemnya bagus dan terpercaya! Dapat Rp 4.300.000/bulan.', rating: 5 },
+        { id: 14, name: 'Ratna Permata', text: 'Rekomendasi banget buat pemula! Rp 2.200.000/bulan.', rating: 5 },
+        { id: 15, name: 'Rizki Hidayat', text: 'Admin ramah, komisi selalu dibayar! Rp 3.700.000/bulan.', rating: 5 },
+        { id: 16, name: 'Andi Susanto', text: 'Produknya mudah dijual, komisi besar! Rp 5.800.000/bulan.', rating: 5 },
+        { id: 17, name: 'Diana Kartika', text: 'Sudah 6 bulan bergabung, tidak pernah kecewa! Rp 4.600.000/bulan.', rating: 5 },
+        { id: 18, name: 'Eko Pratama', text: 'Program yang mengubah hidup saya! Total Rp 25.000.000.', rating: 5 },
+        { id: 19, name: 'Fitri Handayani', text: 'Komisi besar, produk laku keras! Rp 6.100.000/bulan.', rating: 5 },
+        { id: 20, name: 'Gilang Wibowo', text: 'Dapat bonus tambahan setiap bulan! Rp 3.200.000 + bonus.', rating: 5 },
+        { id: 21, name: 'Citra Dewi', text: 'Sangat puas dengan pelayanan admin! Rp 4.800.000/bulan.', rating: 5 },
+        { id: 22, name: 'Reza Pahlevi', text: 'Modal kecil, untung besar! Rp 5.300.000/bulan.', rating: 5 },
+        { id: 23, name: 'Nina Susanti', text: 'Sudah ajak teman-teman, semua suka! Rp 3.500.000/bulan.', rating: 5 },
+        { id: 24, name: 'Omar Hakim', text: 'Affiliate termudah yang pernah ada! Rp 2.800.000/bulan.', rating: 5 },
+        { id: 25, name: 'Putri Indah', text: 'Dapat komisi tiap hari, seru! Rp 4.200.000/bulan.', rating: 5 },
+        { id: 26, name: 'Qori Ahmad', text: 'Sistem pembayaran paling cepat! Rp 5.600.000/bulan.', rating: 5 },
+        { id: 27, name: 'Rani Amelia', text: 'Recommended banget untuk semua kalangan! Rp 3.900.000/bulan.', rating: 5 }
     ];
 
     // Function to generate star rating HTML
