@@ -158,7 +158,7 @@ async function initializeApp() {
         generateNotifications();
         
         // Setup auto-refresh untuk update real-time
-        setInterval(checkForUpdates, 5000);
+        setInterval(checkForUpdates, 10000);
         
         console.log('=== INISIALISASI APLIKASI SELESAI ===');
         
@@ -1563,134 +1563,41 @@ function showToast(message, type = 'info') {
     }, 3000);
 }
 
-// Testimonials - Auto Generate New Testimonials
+// Testimonials - 27 Testimoni Statis Berputar
 async function generateTestimonials() {
     const track = document.getElementById('testimonialsTrack');
     if (!track) return;
 
-    // Array untuk menyimpan testimonials
-    let testimonials = [];
-    
-    // Load existing testimonials from Firebase or localStorage
-    if (window.firebaseService && window.firebaseService.isInitialized()) {
-        testimonials = await window.firebaseService.getTestimonials();
-    } else {
-        const savedTestimonials = localStorage.getItem('testimonials');
-        if (savedTestimonials) {
-            testimonials = JSON.parse(savedTestimonials);
-        }
-    }
-    
-    if (testimonials.length === 0) {
-        // Initial testimonials
-        testimonials = [
-            { id: 1, name: 'Budi Santoso', text: 'Sudah 3 bulan bergabung, komisi selalu tepat waktu!', rating: 5, timestamp: Date.now() - 3600000 },
-            { id: 2, name: 'Siti Nurhaliza', text: 'Mudah sekali dapat uang dari HP, recommended!', rating: 5, timestamp: Date.now() - 7200000 },
-            { id: 3, name: 'Ahmad Fauzi', text: 'Program affiliate terbaik yang pernah saya ikuti.', rating: 5, timestamp: Date.now() - 10800000 },
-            { id: 4, name: 'Dewi Lestari', text: 'Komisi besar dan produknya berkualitas.', rating: 5, timestamp: Date.now() - 14400000 },
-            { id: 5, name: 'Rudi Hermawan', text: 'Sudah withdraw 5 kali, lancar semua!', rating: 5, timestamp: Date.now() - 18000000 }
-        ];
-        
-        if (window.firebaseService && window.firebaseService.isInitialized()) {
-            await window.firebaseService.updateTestimonials(testimonials);
-        } else {
-            localStorage.setItem('testimonials', JSON.stringify(testimonials));
-        }
-    }
-
-    // Array of random names and testimonial texts
-    const firstNames = ['Budi', 'Siti', 'Ahmad', 'Dewi', 'Rudi', 'Maya', 'Doni', 'Lina', 'Hendra', 'Sarah', 'Fajar', 'Indah', 'Bayu', 'Ratna', 'Rizki', 'Andi', 'Diana', 'Eko', 'Fitri', 'Gilang'];
-    const lastNames = ['Santoso', 'Nurhaliza', 'Fauzi', 'Lestari', 'Hermawan', 'Sari', 'Prasetyo', 'Wijaya', 'Kusuma', 'Amalia', 'Nugroho', 'Puspita', 'Setiawan', 'Permata', 'Hidayat', 'Susanto', 'Kartika', 'Pratama', 'Handayani', 'Wibowo'];
-    
-    const testimonialTexts = [
-        'Program affiliate terpercaya dan membayar!',
-        'Komisi selalu tepat waktu, sangat puas!',
-        'Mudah dapat uang hanya dari HP!',
-        'Produk berkualitas, komisi besar!',
-        'Sudah withdraw berkali-kali, lancar semua!',
-        'Recommended banget untuk cari tambahan!',
-        'Admin responsif, sistem transparan!',
-        'Modal HP saja sudah bisa hasilkan jutaan!',
-        'Best affiliate program di Indonesia!',
-        'Komisi besar, produk laku keras!',
-        'Sudah beli motor dari komisi ini!',
-        'Upgrade membership worth it banget!',
-        'Sistemnya bagus dan terpercaya!',
-        'Dari nol sekarang punya penghasilan tetap!',
-        'Rekomendasi banget buat pemula!',
-        'Admin ramah, komisi selalu dibayar!',
-        'Produknya mudah dijual, komisi besar!',
-        'Sudah 6 bulan bergabung, tidak pernah kecewa!',
-        'Program yang mengubah hidup saya!',
-        'Komisi jutaan setiap bulan, mantap!'
+    // Array 27 testimoni statis
+    const testimonials = [
+        { id: 1, name: 'Budi Santoso', text: 'Sudah 3 bulan bergabung, komisi selalu tepat waktu!', rating: 5 },
+        { id: 2, name: 'Siti Nurhaliza', text: 'Mudah sekali dapat uang dari HP, recommended!', rating: 5 },
+        { id: 3, name: 'Ahmad Fauzi', text: 'Program affiliate terbaik yang pernah saya ikuti.', rating: 5 },
+        { id: 4, name: 'Dewi Lestari', text: 'Komisi besar dan produknya berkualitas.', rating: 5 },
+        { id: 5, name: 'Rudi Hermawan', text: 'Sudah withdraw 5 kali, lancar semua!', rating: 5 },
+        { id: 6, name: 'Maya Sari', text: 'Dari nol sekarang punya penghasilan tetap!', rating: 5 },
+        { id: 7, name: 'Doni Prasetyo', text: 'Admin responsif, sistem transparan!', rating: 5 },
+        { id: 8, name: 'Lina Wijaya', text: 'Modal HP saja sudah bisa hasilkan jutaan!', rating: 5 },
+        { id: 9, name: 'Hendra Kusuma', text: 'Best affiliate program di Indonesia!', rating: 5 },
+        { id: 10, name: 'Sarah Amalia', text: 'Komisi jutaan setiap bulan, mantap!', rating: 5 },
+        { id: 11, name: 'Fajar Nugroho', text: 'Sudah beli motor dari komisi ini!', rating: 5 },
+        { id: 12, name: 'Indah Puspita', text: 'Upgrade membership worth it banget!', rating: 5 },
+        { id: 13, name: 'Bayu Setiawan', text: 'Sistemnya bagus dan terpercaya!', rating: 5 },
+        { id: 14, name: 'Ratna Permata', text: 'Rekomendasi banget buat pemula!', rating: 5 },
+        { id: 15, name: 'Rizki Hidayat', text: 'Admin ramah, komisi selalu dibayar!', rating: 5 },
+        { id: 16, name: 'Andi Susanto', text: 'Produknya mudah dijual, komisi besar!', rating: 5 },
+        { id: 17, name: 'Diana Kartika', text: 'Sudah 6 bulan bergabung, tidak pernah kecewa!', rating: 5 },
+        { id: 18, name: 'Eko Pratama', text: 'Program yang mengubah hidup saya!', rating: 5 },
+        { id: 19, name: 'Fitri Handayani', text: 'Komisi besar, produk laku keras!', rating: 5 },
+        { id: 20, name: 'Gilang Wibowo', text: 'Dapat bonus tambahan setiap bulan!', rating: 5 },
+        { id: 21, name: 'Citra Dewi', text: 'Sangat puas dengan pelayanan admin!', rating: 5 },
+        { id: 22, name: 'Reza Pahlevi', text: 'Modal kecil, untung besar!', rating: 5 },
+        { id: 23, name: 'Nina Susanti', text: 'Sudah ajak teman-teman, semua suka!', rating: 5 },
+        { id: 24, name: 'Omar Hakim', text: 'Affiliate termudah yang pernah ada!', rating: 5 },
+        { id: 25, name: 'Putri Indah', text: 'Dapat komisi tiap hari, seru!', rating: 5 },
+        { id: 26, name: 'Qori Ahmad', text: 'Sistem pembayaran paling cepat!', rating: 5 },
+        { id: 27, name: 'Rani Amelia', text: 'Recommended banget untuk semua kalangan!', rating: 5 }
     ];
-
-    // Function to generate random name
-    function generateRandomName() {
-        const firstName = firstNames[Math.floor(Math.random() * firstNames.length)];
-        const lastName = lastNames[Math.floor(Math.random() * lastNames.length)];
-        return `${firstName} ${lastName}`;
-    }
-
-    // Function to generate random testimonial
-    async function generateNewTestimonial() {
-        const newTestimonial = {
-            id: Date.now(),
-            name: generateRandomName(),
-            text: testimonialTexts[Math.floor(Math.random() * testimonialTexts.length)],
-            rating: 5, // Always 5 stars for positive impression
-            timestamp: Date.now()
-        };
-        
-        // Add to beginning of array
-        testimonials.unshift(newTestimonial);
-        
-        // Keep only last 20 testimonials
-        if (testimonials.length > 20) {
-            testimonials = testimonials.slice(0, 20);
-        }
-        
-        // Save to Firebase or localStorage
-        if (window.firebaseService && window.firebaseService.isInitialized()) {
-            await window.firebaseService.updateTestimonials(testimonials);
-        } else {
-            localStorage.setItem('testimonials', JSON.stringify(testimonials));
-        }
-        
-        // Update display
-        updateTestimonialsDisplay();
-    }
-
-    // Function to update display
-    function updateTestimonialsDisplay() {
-        track.innerHTML = '';
-        
-        // Create two sets for smooth scrolling
-        const doubledTestimonials = [...testimonials, ...testimonials];
-        
-        doubledTestimonials.forEach((testimonial, index) => {
-            const isNew = index < testimonials.length && 
-                          (Date.now() - testimonial.timestamp) < 4000; // New if less than 4 seconds old
-            
-            const card = document.createElement('div');
-            card.className = `testimonial-card ${isNew ? 'new' : ''}`;
-            card.innerHTML = `
-                <div class="testimonial-header">
-                    <div class="testimonial-avatar">${testimonial.name.charAt(0)}</div>
-                    <div>
-                        <div class="testimonial-name">${testimonial.name}</div>
-                        <div class="testimonial-rating">
-                            ${generateStars(testimonial.rating)}
-                            ${isNew ? '<span class="new-badge">Baru!</span>' : ''}
-                        </div>
-                    </div>
-                </div>
-                <div class="testimonial-text">"${testimonial.text}"</div>
-                ${isNew ? '<div class="testimonial-time">Baru saja</div>' : ''}
-            `;
-            track.appendChild(card);
-        });
-    }
 
     // Function to generate star rating HTML
     function generateStars(rating) {
@@ -1701,17 +1608,37 @@ async function generateTestimonials() {
         return stars;
     }
 
+    // Function to update display
+    function updateTestimonialsDisplay() {
+        track.innerHTML = '';
+        
+        // Create two sets for smooth scrolling
+        const doubledTestimonials = [...testimonials, ...testimonials];
+        
+        doubledTestimonials.forEach((testimonial) => {
+            const card = document.createElement('div');
+            card.className = 'testimonial-card';
+            card.innerHTML = `
+                <div class="testimonial-header">
+                    <div class="testimonial-avatar">${testimonial.name.charAt(0)}</div>
+                    <div>
+                        <div class="testimonial-name">${testimonial.name}</div>
+                        <div class="testimonial-rating">
+                            ${generateStars(testimonial.rating)}
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial-text">"${testimonial.text}"</div>
+            `;
+            track.appendChild(card);
+        });
+    }
+
     // Initial display
     updateTestimonialsDisplay();
-
-    // Set up auto-generation every 2 seconds
-    setInterval(generateNewTestimonial, 2000);
-
-    // Make function globally accessible for manual triggering if needed
-    window.generateNewTestimonial = generateNewTestimonial;
 }
 
-// Notifications - Auto Generate Withdrawals dengan Auto Scroll (Level Master ke atas)
+// Notifications - Generate Penarikan dengan Auto Scroll (Lebih Cepat)
 async function generateNotifications() {
     const scroll = document.getElementById('notificationsScroll');
     if (!scroll) return;
@@ -1793,14 +1720,15 @@ async function generateNotifications() {
         updateNotificationsDisplay();
     }
 
-    // Function to update display dengan auto scroll
+    // Function to update display dengan auto scroll lebih cepat
     function updateNotificationsDisplay() {
         scroll.innerHTML = '';
         
         // Create container untuk scrolling
         const scrollContainer = document.createElement('div');
         scrollContainer.className = 'notifications-track';
-        scrollContainer.style.animation = 'scrollNotifications 25s linear infinite';
+        // Durasi scroll dipercepat dari 25s menjadi 15s
+        scrollContainer.style.animation = 'scrollNotifications 60s linear infinite';
         
         // Create dua set untuk smooth looping
         const doubledNotifications = [...notifications, ...notifications];
@@ -1823,7 +1751,7 @@ async function generateNotifications() {
     // Initial display
     updateNotificationsDisplay();
 
-    // Set up auto-generation setiap 5 detik
+    // Set up auto-generation setiap 5 detik (dari 10 detik)
     setInterval(generateNewNotification, 5000);
 
     // Make function globally accessible
