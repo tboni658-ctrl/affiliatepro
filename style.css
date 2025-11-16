@@ -1911,7 +1911,7 @@ body {
     /* Notifications mobile */
     .notifications-track {
         /* Durasi mobile lebih cepat lagi */
-        animation: scrollNotifications 10s linear infinite !important;
+        animation: scrollNotifications 120s linear infinite !important;
     }
 }
 
