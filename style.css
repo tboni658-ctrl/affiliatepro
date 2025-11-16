@@ -789,7 +789,7 @@ body {
     gap: 8px;
     padding: 8px 0;
     /* Durasi dipercepat dari 25s menjadi 15s */
-    animation: scrollNotifications 15s linear infinite;
+    animation: scrollNotifications 120s linear infinite;
 }
 
 .notification-item {
