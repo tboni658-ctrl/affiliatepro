@@ -583,44 +583,41 @@ function loadMoreProducts() {
     showToast('Upgrade membership untuk melihat lebih banyak produk!', 'error');
 }
 
+// VERSI BARU YANG TELAH DIPERBAIKI
 async function shareProduct(productId) {
-    const productsGrid = document.getElementById('productsGrid');
-    const productCards = productsGrid.querySelectorAll('.product-card');
-    
-    let product = null;
-    productCards.forEach(card => {
-        const shareBtn = card.querySelector('button[onclick*="shareProduct"]');
-        if (shareBtn && shareBtn.getAttribute('onclick').includes(productId)) {
-            const name = card.querySelector('.product-name').textContent;
-            const priceText = card.querySelector('.product-price').textContent;
-            const commissionText = card.querySelector('.product-commission').textContent;
-            const image = card.querySelector('.product-image').src;
-            
-            const price = parseInt(priceText.replace(/[^0-9]/g, ''));
-            // Extract commission percentage from text like "Komisi: 10% (Rp 500.000)"
-            const commissionMatch = commissionText.match(/Komisi: (\d+)%/);
-            const commission = commissionMatch ? parseInt(commissionMatch[1]) : 0;
-            const commissionAmount = calculateCommissionInRupiah(price, commission);
-            
-            product = {
-                id: productId,
-                name,
-                price,
-                commission,
-                commissionAmount,
-                image,
-                url: `https://example.com/product/${productId}`
-            };
+    console.log(`Mencoba berbagi produk dengan ID: ${productId}`);
+
+    // 1. AMBIL DATA PRODUK TERBARU DARI DATABASE
+    let products = [];
+    if (window.firebaseService && window.firebaseService.isInitialized()) {
+        try {
+            products = await window.firebaseService.getProducts();
+            console.log('Produk berhasil dimuat dari Firebase:', products);
+        } catch (error) {
+            console.error('Gagal memuat produk dari Firebase:', error);
+            // Fallback ke localStorage jika Firebase gagal
+            products = JSON.parse(localStorage.getItem('products')) || [];
         }
-    });
-    
+    } else {
+        products = JSON.parse(localStorage.getItem('products')) || [];
+        console.log('Produk dimuat dari localStorage:', products);
+    }
+
+    // 2. CARI PRODUK SPESIFIK BERDASARKAN ID
+    const product = products.find(p => p.id == productId);
+
     if (product) {
+        console.log('Produk ditemukan:', product);
+        
+        // 3. GUNAKAN DATA TERBARU UNTUK MENAMPILKAN MODAL
         currentProduct = product;
         document.getElementById('productModalTitle').textContent = product.name;
         document.getElementById('productModalImage').src = product.image;
         document.getElementById('productModalName').textContent = product.name;
         document.getElementById('productModalPrice').textContent = formatCurrency(product.price);
-        document.getElementById('productModalCommission').textContent = `${product.commission}% (${formatCurrency(product.commissionAmount)})`;
+        
+        const commissionAmount = calculateCommissionInRupiah(product.price, product.commission);
+        document.getElementById('productModalCommission').textContent = `${product.commission}% (${formatCurrency(commissionAmount)})`;
         
         document.getElementById('productModal').classList.add('active');
         document.getElementById('modalOverlay').classList.add('active');
@@ -629,12 +626,14 @@ async function shareProduct(productId) {
         currentUser.linksShared = (currentUser.linksShared || 0) + 1;
         localStorage.setItem('currentUser', JSON.stringify(currentUser));
         
-        // Update in Firebase
         if (window.firebaseService && window.firebaseService.isInitialized()) {
             window.firebaseService.updateUser(currentUser.id, { linksShared: currentUser.linksShared });
         }
         
         updateDashboard();
+    } else {
+        console.error('Produk tidak ditemukan dengan ID:', productId);
+        showToast('Produk tidak ditemukan!', 'error');
     }
 }
 
