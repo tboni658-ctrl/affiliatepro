@@ -709,7 +709,7 @@ async function loadMembership() {
                 <h3 class="membership-level">${level}</h3>
             </div>
             <div class="membership-body">
-                <div class="membership-commission">Komisi: ${commission}% (${formatCurrency(estimatedCommission)} dari produk Rp 5.000.000)</div>
+                <div class="membership-commission">Komisi: ${commission}%</div>
                 <div class="membership-price">Harga: ${price === 0 ? 'Gratis' : formatCurrency(price)}</div>
                 <ul class="membership-features">
                     <li><i class="fas fa-check"></i> Akses ke ${level === 'Warrior' ? '10' : level === 'Master' ? '25' : level === 'Grandmaster' ? '50' : level === 'Epic' ? '100' : level === 'Legend' ? '150' : 'Semua'} produk</li>
